@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import Head from 'next/head'
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_REQUEST': return { loading: true, error: '' };
@@ -73,6 +74,9 @@ function Counter({ params }) {
   }
   return (
     <>
+     <Head>
+       <title>Contador</title>
+     </Head>
       <div className="overflow-x-hidden" style={{ background: "linear-gradient(90deg,#121214,rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1509023464722-18d996393ca8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')", height: '100vh' }}>
         <div className="flex items-center justify-center w-screen h-full">
           <div className="flex-col">

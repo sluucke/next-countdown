@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 export default function Home() {
   const [date, setDate] = useState('')
   const [error, setError] = useState('')
@@ -29,6 +30,10 @@ export default function Home() {
     return router.push(`/counter/${data.counter._id}`)
   }
   return (
+    <>
+    <Head>
+       <title>Contador</title>
+     </Head>
     <div className="flex items-center justify-center w-screen h-screen">
       <div className="flex-col">
         <h1 className="text-gray-200 text-5xl font-extrabold py-3">Contador</h1>
@@ -48,5 +53,6 @@ export default function Home() {
         </form>
       </div>
     </div>
+    </>
   )
 }
