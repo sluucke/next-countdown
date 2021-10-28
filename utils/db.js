@@ -1,32 +1,36 @@
+
 import mongoose from 'mongoose'
+const MONGODB_URI = process.env.MONGODB_URI
 
-const connection = {}
+if (!MONGODB_URI) {
+  throw new Error(
+    'Please define the MONGODB_URI environment variable inside .env.local'
+  )
+}
 
-async function connect() {
-    if(connection.isConnected) {
-        console.log('already connected')
-        return;
+let cached = global.mongoose
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null }
+}
+
+async function dbConnect () {
+  if (cached.conn) {
+    return cached.conn
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     }
-    const db = await mongoose.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then(mongoose => {
+      return mongoose
     })
-    console.log('new connection')
-    connection.isConnected = db.connections[0].readyState
+  }
+  cached.conn = await cached.promise
+  return cached.conn
 }
 
-async function disconnect() {
-    if(connection.isConnected) {
-        if(process.env.NODE_ENV === 'production') {
-            await mongoose.disconnect()
-            connection.isConnected = false
-        } else {
-            console.log('not disconnected')
-        }
-    }
-}
-
-
-const db = { connect, disconnect} 
-
-export default db
+export default dbConnect
